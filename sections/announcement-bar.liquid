@@ -1,0 +1,85 @@
+{% comment %}
+  Simple Announcement Bar
+  - Single centered bold line on a rose-pink background
+  Add this file to: sections/announcement-bar-rose.liquid
+  Then add {% section 'announcement-bar-rose' %} to your theme.liquid (usually right after <body>)
+{% endcomment %}
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+  .announcement-bar-rose {
+    background-color: {{ section.settings.bg_color }};
+    color: {{ section.settings.text_color }};
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: 'DM Sans', Arial, sans-serif;
+    border-radius: 0 0 {{ section.settings.corner_radius }}px {{ section.settings.corner_radius }}px;
+  }
+
+  .announcement-bar-rose__message {
+    margin: 0;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 749px) {
+    .announcement-bar-rose__message {
+      font-size: 15px;
+      letter-spacing: 0.03em;
+    }
+  }
+</style>
+
+<div class="announcement-bar-rose">
+  <p class="announcement-bar-rose__message">
+    {{ section.settings.message }}
+  </p>
+</div>
+
+{% schema %}
+{
+  "name": "Announcement Bar (Rose)",
+  "settings": [
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "#C96A7C"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "text",
+      "id": "message",
+      "label": "Message",
+      "default": "New Collection | Free Shipping on Orders Above PKR 5,000"
+    },
+    {
+      "type": "range",
+      "id": "corner_radius",
+      "label": "Bottom corner radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 10
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement Bar (Rose)"
+    }
+  ]
+}
+{% endschema %}

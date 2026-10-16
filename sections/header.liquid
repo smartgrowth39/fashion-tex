@@ -1,0 +1,1614 @@
+{% comment %}
+Fashion Tex Custom Header
+
+* Announcement bar scrolls away
+* Navbar locks to top after reaching top
+* No hide/show animation
+* Logo
+* Navigation menu with dropdown
+* Search / Account / Cart
+* Instagram / Facebook / TikTok
+* Hover underline animation
+* Responsive mobile layout
+* Customer Login/Name Greeting Added
+
+File:
+sections/fashion-header.liquid
+{% endcomment %}
+
+<style>
+
+  /* Prevent horizontal overflow */
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+.ft-mobile-drawer,
+.ft-mobile-overlay {
+  max-width: 100vw;
+}
+
+  /* =========================================
+     HEADER BASE
+     ========================================= */
+
+  .fashion-header {
+    background-color: {{ section.settings.bg_color }};
+    border-top: 3px solid {{ section.settings.accent_color }};
+    font-family: inherit;
+    width: 100%;
+    z-index: 99999;
+    position: relative;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+  }
+
+  /*
+    This class is added by JavaScript only when
+    the navbar reaches the top of the screen.
+  */
+
+  .fashion-header.fashion-header--fixed {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    z-index: 999999 !important;
+  }
+
+  /*
+    Spacer prevents page content from jumping
+    when header becomes fixed.
+  */
+
+  .fashion-header-spacer {
+    display: none;
+    width: 100%;
+    height: 0;
+  }
+
+  .fashion-header-spacer.is-active {
+    display: block;
+  }
+
+
+  /* =========================================
+     HEADER INNER
+     ========================================= */
+
+  .fashion-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+
+    width: 100%;
+    max-width: 1400px;
+
+    margin: 0 auto;
+
+    padding: 18px 32px;
+
+    box-sizing: border-box;
+  }
+
+
+  /* =========================================
+     LOGO
+     ========================================= */
+
+  .fashion-header__logo {
+    text-decoration: none;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .fashion-header__logo-name {
+    font-family: Georgia, "Times New Roman", serif;
+    font-style: italic;
+    font-size: 28px;
+    font-weight: 700;
+    color: {{ section.settings.accent_color }};
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+
+  /* =========================================
+     NAVIGATION
+     ========================================= */
+
+  .fashion-header__nav {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .fashion-header__nav > ul {
+    list-style: none;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    gap: 28px;
+
+    margin: 0;
+    padding: 0;
+
+    flex-wrap: nowrap;
+  }
+
+  .fashion-header__nav li {
+    position: relative;
+    list-style: none;
+  }
+
+  .fashion-header__nav > ul > li > a {
+    position: relative;
+
+    display: inline-flex;
+    align-items: center;
+
+    gap: 4px;
+
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    color: {{ section.settings.text_color }};
+
+    padding: 5px 0;
+
+    white-space: nowrap;
+
+    transition: color 0.25s ease;
+  }
+
+  .fashion-header__nav > ul > li > a:hover {
+    color: {{ section.settings.accent_color }};
+  }
+
+
+  /* =========================================
+     NAV UNDERLINE
+     ========================================= */
+
+  .fashion-header__nav > ul > li > a::after {
+    content: "";
+
+    position: absolute;
+
+    left: 50%;
+    bottom: -5px;
+
+    width: 0;
+    height: 2px;
+
+    background: {{ section.settings.accent_color }};
+
+    transform: translateX(-50%);
+
+    transition: width 0.3s ease;
+  }
+
+  .fashion-header__nav > ul > li > a:hover::after,
+  .fashion-header__nav > ul > li > a[aria-current="page"]::after {
+    width: 100%;
+  }
+
+
+  /* =========================================
+     CARET
+     ========================================= */
+
+  .fashion-header__caret {
+    width: 10px;
+    height: 10px;
+
+    fill: none;
+
+    stroke: currentColor;
+    stroke-width: 2;
+
+    flex-shrink: 0;
+  }
+
+
+  /* =========================================
+     DROPDOWN
+     ========================================= */
+
+  .fashion-header__submenu {
+    display: none;
+
+    position: absolute;
+
+    top: calc(100% + 10px);
+    left: 0;
+
+    background: {{ section.settings.bg_color }};
+
+    border: 1px solid {{ section.settings.border_color }};
+
+    border-radius: 5px;
+
+    padding: 8px 0;
+
+    min-width: 180px;
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.10);
+
+    z-index: 100000;
+
+    list-style: none;
+
+    margin: 0;
+  }
+
+  .fashion-header__submenu::before {
+    content: "";
+
+    position: absolute;
+
+    top: -12px;
+    left: 0;
+
+    width: 100%;
+    height: 12px;
+  }
+
+  .fashion-header__nav li:hover > .fashion-header__submenu {
+    display: block;
+  }
+
+  .fashion-header__submenu li {
+    width: 100%;
+  }
+
+  .fashion-header__submenu li a {
+    display: block;
+
+    padding: 9px 16px;
+
+    font-size: 13px;
+
+    color: {{ section.settings.text_color }};
+
+    text-decoration: none;
+
+    white-space: nowrap;
+
+    transition:
+      color 0.2s ease,
+      background 0.2s ease;
+  }
+
+  .fashion-header__submenu li a:hover {
+    color: {{ section.settings.accent_color }};
+
+    background: rgba(0, 0, 0, 0.03);
+  }
+
+  /* =========================================
+   HAMBURGER BUTTON
+   ========================================= */
+
+.fashion-header__hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: {{ section.settings.text_color }};
+  flex-shrink: 0;
+  z-index: 1000001;
+}
+
+.fashion-header__hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+@media screen and (max-width: 989px) {
+  .fashion-header__hamburger {
+    display: flex;
+  }
+}
+
+
+/* =========================================
+   MOBILE DRAWER OVERLAY
+   ========================================= */
+
+.ft-mobile-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 1000002;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.ft-mobile-overlay.is-open {
+  display: block;
+}
+
+.ft-mobile-overlay.is-visible {
+  opacity: 1;
+}
+
+
+/* =========================================
+   MOBILE DRAWER
+   ========================================= */
+
+.ft-mobile-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 82%;
+  max-width: 340px;
+  height: 100%;
+  background: {{ section.settings.bg_color }};
+  z-index: 1000003;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 4px 0 30px rgba(0, 0, 0, 0.12);
+  transform: translateX(-100%);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ft-mobile-drawer.is-open {
+  transform: translateX(0);
+}
+
+
+/* =========================================
+   DRAWER HEADER
+   ========================================= */
+
+.ft-drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid {{ section.settings.border_color }};
+  flex-shrink: 0;
+}
+
+.ft-drawer__brand {
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+  font-size: 22px;
+  font-weight: 700;
+  color: {{ section.settings.accent_color }};
+  text-decoration: none;
+}
+
+.ft-drawer__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: {{ section.settings.text_color }};
+  padding: 4px;
+  border-radius: 50%;
+  transition: background 0.2s ease;
+  flex-shrink: 0;
+}
+
+.ft-drawer__close:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.ft-drawer__close svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+}
+
+
+/* =========================================
+   DRAWER NAV
+   ========================================= */
+
+.ft-drawer__nav {
+  flex: 1;
+  padding: 12px 0;
+}
+
+.ft-drawer__nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ft-drawer__nav > ul > li {
+  border-bottom: 1px solid {{ section.settings.border_color }};
+}
+
+.ft-drawer__nav > ul > li:last-child {
+  border-bottom: none;
+}
+
+.ft-drawer__nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 15px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: {{ section.settings.text_color }};
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: color 0.2s ease, background 0.2s ease;
+  box-sizing: border-box;
+}
+
+.ft-drawer__nav-link:hover {
+  color: {{ section.settings.accent_color }};
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.ft-drawer__nav-caret {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.ft-drawer__nav > ul > li.is-expanded .ft-drawer__nav-caret {
+  transform: rotate(180deg);
+}
+
+
+/* =========================================
+   DRAWER SUBMENU
+   ========================================= */
+
+.ft-drawer__submenu {
+  display: none;
+  background: rgba(0, 0, 0, 0.02);
+  padding: 4px 0;
+}
+
+.ft-drawer__nav > ul > li.is-expanded .ft-drawer__submenu {
+  display: block;
+}
+
+.ft-drawer__submenu li a {
+  display: block;
+  padding: 12px 20px 12px 32px;
+  font-size: 13px;
+  color: {{ section.settings.text_color }};
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.ft-drawer__submenu li a:hover {
+  color: {{ section.settings.accent_color }};
+}
+
+
+/* =========================================
+   DRAWER FOOTER (social icons)
+   ========================================= */
+
+.ft-drawer__footer {
+  padding: 20px;
+  border-top: 1px solid {{ section.settings.border_color }};
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.ft-drawer__footer a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: {{ section.settings.text_color }};
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+
+.ft-drawer__footer a:hover {
+  color: {{ section.settings.accent_color }};
+}
+
+.ft-drawer__footer svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+
+  /* =========================================
+     RIGHT SIDE
+     ========================================= */
+
+  .fashion-header__right {
+    display: flex;
+    align-items: center;
+
+    gap: 18px;
+
+    flex-shrink: 0;
+  }
+
+  .fashion-header__icons {
+    display: flex;
+    align-items: center;
+
+    gap: 18px;
+  }
+
+
+  /* =========================================
+     ICONS
+     ========================================= */
+
+  .fashion-header__icon {
+    position: relative;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    color: {{ section.settings.text_color }};
+
+    text-decoration: none;
+
+    transition:
+      color 0.25s ease,
+      transform 0.25s ease;
+  }
+
+  .fashion-header__icon:hover {
+    color: {{ section.settings.accent_color }};
+
+    transform: translateY(-2px);
+  }
+
+  .fashion-header__icon svg {
+    width: 20px;
+    height: 20px;
+
+    stroke: currentColor;
+
+    fill: none;
+
+    stroke-width: 1.8;
+  }
+
+
+  /* =========================================
+     CART COUNT
+     ========================================= */
+
+  .fashion-header__cart-count {
+    font-size: 13px;
+
+    font-weight: 600;
+
+    color: {{ section.settings.text_color }};
+
+    margin-left: 3px;
+  }
+
+
+  /* =========================================
+     SOCIAL ICONS
+     ========================================= */
+
+  .fashion-header__social {
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+
+    padding-left: 10px;
+
+    border-left: 1px solid {{ section.settings.border_color }};
+  }
+
+  .fashion-header__social a {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    color: {{ section.settings.text_color }};
+
+    text-decoration: none;
+
+    transition:
+      color 0.25s ease,
+      transform 0.25s ease;
+  }
+
+  .fashion-header__social a:hover {
+    color: {{ section.settings.accent_color }};
+
+    transform: translateY(-2px);
+  }
+
+  .fashion-header__social svg {
+    width: 18px;
+    height: 18px;
+
+    fill: currentColor;
+  }
+
+
+  /* =========================================
+     TABLET
+     ========================================= */
+
+  @media screen and (max-width: 1100px) {
+
+    .fashion-header__inner {
+      gap: 16px;
+
+      padding-left: 22px;
+      padding-right: 22px;
+    }
+
+    .fashion-header__nav > ul {
+      gap: 18px;
+    }
+
+    .fashion-header__right {
+      gap: 12px;
+    }
+
+    .fashion-header__icons {
+      gap: 12px;
+    }
+
+  }
+
+
+  /* =========================================
+     MOBILE
+     ========================================= */
+
+@media screen and (max-width: 989px) {
+
+  .fashion-header__nav {
+    display: none;
+  }
+
+  .fashion-header__inner {
+    justify-content: space-between;
+  }
+
+  .fashion-header__logo {
+    order: 1;
+  }
+
+  .fashion-header__right {
+    order: 2;
+  }
+
+  .fashion-header__hamburger {
+    order: 3;
+  }
+
+}
+
+
+
+  @media screen and (max-width: 749px) {
+
+    .fashion-header {
+      border-top-width: 2px;
+    }
+
+    .fashion-header__inner {
+      padding: 14px 16px;
+
+      gap: 12px;
+    }
+
+    .fashion-header__logo-name {
+      font-size: 23px;
+    }
+
+    .fashion-header__right {
+      gap: 10px;
+    }
+
+    .fashion-header__icons {
+      gap: 12px;
+    }
+
+    .fashion-header__icon svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .fashion-header__social {
+      gap: 9px;
+
+      padding-left: 8px;
+    }
+
+    .fashion-header__social svg {
+      width: 16px;
+      height: 16px;
+    }
+
+  }
+
+
+  /* =========================================
+     SMALL MOBILE
+     ========================================= */
+
+  @media screen and (max-width: 480px) {
+
+    .fashion-header__social {
+      display: none;
+    }
+
+    .fashion-header__inner {
+      padding-left: 14px;
+      padding-right: 14px;
+    }
+
+    .fashion-header__logo-name {
+      font-size: 22px;
+    }
+
+  }
+
+</style>
+
+<!-- =========================================
+     HEADER
+     ========================================= -->
+
+<header class="fashion-header" id="FashionTexHeader-{{ section.id }}">
+
+  <div class="fashion-header__inner">
+
+
+<!-- LOGO -->
+
+<a
+  href="{{ routes.root_url }}"
+  class="fashion-header__logo"
+  aria-label="{{ section.settings.brand_name }}"
+>
+
+  <span class="fashion-header__logo-name">
+    {{ section.settings.brand_name }}
+  </span>
+
+</a>
+
+
+<!-- =====================================
+     NAVIGATION
+     ===================================== -->
+
+{%- if section.settings.menu != blank -%}
+
+  <nav
+    class="fashion-header__nav"
+    aria-label="Main navigation"
+  >
+
+    <ul>
+
+      {%- for link in section.settings.menu.links -%}
+
+        <li>
+
+          <a
+            href="{{ link.url }}"
+            {% if link.active %}
+              aria-current="page"
+            {% endif %}
+          >
+
+            {{ link.title }}
+
+            {%- if link.links != blank -%}
+
+              <svg
+                class="fashion-header__caret"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+
+                <polyline points="6 9 12 15 18 9"></polyline>
+
+              </svg>
+
+            {%- endif -%}
+
+          </a>
+
+
+          {%- if link.links != blank -%}
+
+            <ul class="fashion-header__submenu">
+
+              {%- for childlink in link.links -%}
+
+                <li>
+
+                  <a href="{{ childlink.url }}">
+                    {{ childlink.title }}
+                  </a>
+
+                </li>
+
+              {%- endfor -%}
+
+            </ul>
+
+          {%- endif -%}
+
+        </li>
+
+      {%- endfor -%}
+
+    </ul>
+
+  </nav>
+
+{%- endif -%}
+
+
+<!-- =====================================
+     RIGHT SIDE
+     ===================================== -->
+
+<div class="fashion-header__right">
+
+  <!-- HAMBURGER (mobile only) -->
+<button
+  class="fashion-header__hamburger"
+  id="FtHamburger-{{ section.id }}"
+  aria-label="Open navigation menu"
+  aria-expanded="false"
+  aria-controls="FtMobileDrawer-{{ section.id }}"
+>
+  <span></span>
+  <span></span>
+  <span></span>
+</button>
+
+
+
+  <!-- SEARCH / ACCOUNT / CART -->
+
+  <div class="fashion-header__icons">
+
+
+    <!-- SEARCH -->
+
+    <a
+      href="{{ routes.search_url }}"
+      class="fashion-header__icon"
+      aria-label="Search"
+    >
+
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+
+        <circle
+          cx="11"
+          cy="11"
+          r="7"
+        ></circle>
+
+        <line
+          x1="21"
+          y1="21"
+          x2="16.65"
+          y2="16.65"
+        ></line>
+
+      </svg>
+
+    </a>
+
+
+    <!-- ACCOUNT (With Login & Greeting Logic) -->
+
+    <a
+      href="{{ routes.account_url }}"
+      class="fashion-header__icon"
+      aria-label="Account"
+    >
+      {%- if customer -%}
+        <span style="font-size: 14px; font-weight: 600; white-space: nowrap;">Hi, {{ customer.first_name }}</span>
+      {%- else -%}
+        <svg
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+      {%- endif -%}
+    </a>
+
+
+    <!-- CART -->
+
+    <a
+      href="{{ routes.cart_url }}"
+      class="fashion-header__icon"
+      aria-label="Cart"
+    >
+
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+
+        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+
+        <path d="M3 6h18"></path>
+
+        <path d="M16 10a4 4 0 0 1-8 0"></path>
+
+      </svg>
+
+      <span class="fashion-header__cart-count">
+        {{ cart.item_count }}
+      </span>
+
+    </a>
+
+  </div>
+
+
+  <!-- =====================================
+       SOCIAL MEDIA
+       ===================================== -->
+
+  <div class="fashion-header__social">
+
+
+    <!-- INSTAGRAM -->
+
+    <a
+      href="{{ section.settings.instagram_url }}"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Instagram"
+    >
+
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+
+        <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5A4.5 4.5 0 1 1 12 16.5 4.5 4.5 0 0 1 12 7.5zm0 2A2.5 2.5 0 1 0 12 14.5 2.5 2.5 0 0 0 12 9.5zM17.5 6.5a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"></path>
+
+      </svg>
+
+    </a>
+
+
+    <!-- FACEBOOK -->
+
+    <a
+      href="{{ section.settings.facebook_url }}"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Facebook"
+    >
+
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+
+        <path d="M14 8h3V4h-3c-2.76 0-5 2.24-5 5v3H6v4h3v8h4v-8h3.5l.5-4H13V9c0-.55.45-1 1-1z"></path>
+
+      </svg>
+
+    </a>
+
+
+    <!-- TIKTOK -->
+
+    <a
+      href="{{ section.settings.tiktok_url }}"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="TikTok"
+    >
+
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+      >
+
+        <path d="M16 3c.5 2.4 1.9 3.9 4 4.3v3.1c-1.5 0-2.9-.4-4-1.1v6.4a6.3 6.3 0 1 1-6.3-6.3c.4 0 .9 0 1.3.1v3.3a3.2 3.2 0 1 0 1.9 2.9V3H16z"></path>
+
+      </svg>
+
+    </a>
+
+  </div>
+
+</div>
+
+
+
+  </div>
+
+</header>
+
+<!-- =========================================
+     MOBILE OVERLAY
+     ========================================= -->
+<div
+  class="ft-mobile-overlay"
+  id="FtOverlay-{{ section.id }}"
+  aria-hidden="true"
+></div>
+
+<!-- =========================================
+     MOBILE DRAWER
+     ========================================= -->
+<nav
+  class="ft-mobile-drawer"
+  id="FtMobileDrawer-{{ section.id }}"
+  aria-label="Mobile navigation"
+  aria-hidden="true"
+>
+
+  <!-- Drawer header -->
+  <div class="ft-drawer__header">
+    <a href="{{ routes.root_url }}" class="ft-drawer__brand">
+      {{ section.settings.brand_name }}
+    </a>
+    <button
+      class="ft-drawer__close"
+      id="FtDrawerClose-{{ section.id }}"
+      aria-label="Close navigation menu"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Drawer nav links -->
+  <div class="ft-drawer__nav">
+    <ul>
+      {%- if section.settings.menu != blank -%}
+        {%- for link in section.settings.menu.links -%}
+          <li>
+            {%- if link.links != blank -%}
+              <button
+                class="ft-drawer__nav-link"
+                aria-expanded="false"
+              >
+                {{ link.title }}
+                <svg class="ft-drawer__nav-caret" viewBox="0 0 24 24" aria-hidden="true">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </button>
+              <ul class="ft-drawer__submenu">
+                {%- for childlink in link.links -%}
+                  <li>
+                    <a href="{{ childlink.url }}">{{ childlink.title }}</a>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            {%- else -%}
+              <a
+                href="{{ link.url }}"
+                class="ft-drawer__nav-link"
+                {% if link.active %}aria-current="page"{% endif %}
+              >
+                {{ link.title }}
+              </a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      {%- endif -%}
+    </ul>
+  </div>
+
+  <!-- Drawer footer with social icons -->
+  <div class="ft-drawer__footer">
+    {%- if section.settings.instagram_url != blank -%}
+      <a href="{{ section.settings.instagram_url }}" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5A4.5 4.5 0 1 1 12 16.5 4.5 4.5 0 0 1 12 7.5zm0 2A2.5 2.5 0 1 0 12 14.5 2.5 2.5 0 0 0 12 9.5zM17.5 6.5a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"></path></svg>
+      </a>
+    {%- endif -%}
+    {%- if section.settings.facebook_url != blank -%}
+      <a href="{{ section.settings.facebook_url }}" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3c-2.76 0-5 2.24-5 5v3H6v4h3v8h4v-8h3.5l.5-4H13V9c0-.55.45-1 1-1z"></path></svg>
+      </a>
+    {%- endif -%}
+    {%- if section.settings.tiktok_url != blank -%}
+      <a href="{{ section.settings.tiktok_url }}" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 3c.5 2.4 1.9 3.9 4 4.3v3.1c-1.5 0-2.9-.4-4-1.1v6.4a6.3 6.3 0 1 1-6.3-6.3c.4 0 .9 0 1.3.1v3.3a3.2 3.2 0 1 0 1.9 2.9V3H16z"></path></svg>
+      </a>
+    {%- endif -%}
+  </div>
+
+</nav>
+
+
+<!-- =========================================
+     SPACER
+     ========================================= -->
+
+<div
+  class="fashion-header-spacer"
+  id="FashionTexHeaderSpacer-{{ section.id }}"
+  aria-hidden="true"
+></div>
+
+<!-- =========================================
+     STICKY JAVASCRIPT
+     ========================================= -->
+
+     <script>
+(function() {
+
+  function initFtMobileMenu() {
+
+    var sectionId   = '{{ section.id }}';
+    var hamburger   = document.getElementById('FtHamburger-'   + sectionId);
+    var drawer      = document.getElementById('FtMobileDrawer-' + sectionId);
+    var overlay     = document.getElementById('FtOverlay-'     + sectionId);
+    var closeBtn    = document.getElementById('FtDrawerClose-'  + sectionId);
+
+    if (!hamburger || !drawer || !overlay || !closeBtn) return;
+    if (hamburger.dataset.ftMenuInit === 'true') return;
+    hamburger.dataset.ftMenuInit = 'true';
+
+    function openMenu() {
+      overlay.classList.add('is-open');
+      requestAnimationFrame(function() {
+        overlay.classList.add('is-visible');
+        drawer.classList.add('is-open');
+      });
+      drawer.setAttribute('aria-hidden', 'false');
+      hamburger.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMenu() {
+      overlay.classList.remove('is-visible');
+      drawer.classList.remove('is-open');
+      drawer.setAttribute('aria-hidden', 'true');
+      hamburger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      setTimeout(function() {
+        overlay.classList.remove('is-open');
+      }, 350);
+    }
+
+    hamburger.addEventListener('click', openMenu);
+    closeBtn.addEventListener('click', closeMenu);
+    overlay.addEventListener('click', closeMenu);
+
+    // Keyboard ESC
+    document.addEventListener('keyup', function(e) {
+      if (e.key === 'Escape' && drawer.classList.contains('is-open')) {
+        closeMenu();
+      }
+    });
+
+    // Submenu accordion
+    drawer.querySelectorAll('.ft-drawer__nav-link[aria-expanded]').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var li = btn.closest('li');
+        var isExpanded = li.classList.contains('is-expanded');
+        // Collapse all
+        drawer.querySelectorAll('.ft-drawer__nav > ul > li').forEach(function(item) {
+          item.classList.remove('is-expanded');
+          var b = item.querySelector('[aria-expanded]');
+          if (b) b.setAttribute('aria-expanded', 'false');
+        });
+        // Toggle clicked
+        if (!isExpanded) {
+          li.classList.add('is-expanded');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+
+    // Theme editor support
+    document.addEventListener('shopify:section:load', function(evt) {
+      if (evt.target && evt.target.contains(hamburger)) {
+        hamburger.dataset.ftMenuInit = 'false';
+        initFtMobileMenu();
+      }
+    });
+
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFtMobileMenu);
+  } else {
+    initFtMobileMenu();
+  }
+
+})();
+</script>
+
+
+
+<script>
+(function() {
+
+  function initFashionTexStickyHeader() {
+
+    var header = document.getElementById(
+      'FashionTexHeader-{{ section.id }}'
+    );
+
+    var spacer = document.getElementById(
+      'FashionTexHeaderSpacer-{{ section.id }}'
+    );
+
+    if (!header || !spacer) {
+      return;
+    }
+
+
+    /*
+      Prevent duplicate initialization
+    */
+
+    if (header.dataset.stickyInitialized === 'true') {
+      return;
+    }
+
+    header.dataset.stickyInitialized = 'true';
+
+
+    var headerTop = 0;
+    var headerHeight = 0;
+
+
+    /*
+      Calculate original position
+    */
+
+    function calculatePosition() {
+
+      /*
+        Temporarily remove fixed mode
+        so we can get the original document position.
+      */
+
+      var wasFixed = header.classList.contains(
+        'fashion-header--fixed'
+      );
+
+      if (wasFixed) {
+
+        header.classList.remove(
+          'fashion-header--fixed'
+        );
+
+        spacer.classList.remove(
+          'is-active'
+        );
+
+      }
+
+
+      var rect = header.getBoundingClientRect();
+
+      headerTop =
+        rect.top +
+        window.pageYOffset;
+
+      headerHeight =
+        header.offsetHeight;
+
+
+      /*
+        Restore fixed mode if necessary
+      */
+
+      if (wasFixed) {
+
+        spacer.style.height =
+          headerHeight + 'px';
+
+        spacer.classList.add(
+          'is-active'
+        );
+
+        header.classList.add(
+          'fashion-header--fixed'
+        );
+
+      }
+
+    }
+
+
+    /*
+      Check scroll position
+    */
+
+    function handleScroll() {
+
+      var scrollTop =
+        window.pageYOffset ||
+        document.documentElement.scrollTop;
+
+
+      /*
+        When navbar reaches the top,
+        lock it there.
+      */
+
+      if (scrollTop >= headerTop) {
+
+        if (!header.classList.contains(
+          'fashion-header--fixed'
+        )) {
+
+          headerHeight =
+            header.offsetHeight;
+
+          spacer.style.height =
+            headerHeight + 'px';
+
+          spacer.classList.add(
+            'is-active'
+          );
+
+          header.classList.add(
+            'fashion-header--fixed'
+          );
+
+        }
+
+      } else {
+
+        /*
+          At the original position,
+          return navbar to normal flow.
+        */
+
+        if (header.classList.contains(
+          'fashion-header--fixed'
+        )) {
+
+          header.classList.remove(
+            'fashion-header--fixed'
+          );
+
+          spacer.classList.remove(
+            'is-active'
+          );
+
+          spacer.style.height = '0px';
+
+        }
+
+      }
+
+    }
+
+
+    /*
+      Initial calculation
+    */
+
+    calculatePosition();
+
+
+    /*
+      Scroll listener
+    */
+
+    window.addEventListener(
+      'scroll',
+      handleScroll,
+      {
+        passive: true
+      }
+    );
+
+
+    /*
+      Recalculate on resize
+    */
+
+    window.addEventListener(
+      'resize',
+      function() {
+
+        calculatePosition();
+
+        handleScroll();
+
+      }
+    );
+
+
+    /*
+      Shopify Theme Editor support
+    */
+
+    document.addEventListener(
+      'shopify:section:load',
+      function(event) {
+
+        if (
+          event.target &&
+          event.target.contains(header)
+        ) {
+
+          calculatePosition();
+          handleScroll();
+
+        }
+
+      }
+    );
+
+  }
+
+
+  /*
+    Run after page loads
+  */
+
+  if (
+    document.readyState === 'loading'
+  ) {
+
+    document.addEventListener(
+      'DOMContentLoaded',
+      initFashionTexStickyHeader
+    );
+
+  } else {
+
+    initFashionTexStickyHeader();
+
+  }
+
+})();
+</script>
+
+{% schema %}
+
+{
+"name": "Fashion Header",
+
+"settings": [
+
+
+{
+  "type": "text",
+  "id": "brand_name",
+  "label": "Brand name",
+  "default": "Fashion Tex"
+},
+
+{
+  "type": "link_list",
+  "id": "menu",
+  "label": "Navigation menu",
+  "default": "main-menu"
+},
+
+{
+  "type": "header",
+  "content": "Social Media Links"
+},
+
+{
+  "type": "url",
+  "id": "instagram_url",
+  "label": "Instagram URL"
+},
+
+{
+  "type": "url",
+  "id": "facebook_url",
+  "label": "Facebook URL"
+},
+
+{
+  "type": "url",
+  "id": "tiktok_url",
+  "label": "TikTok URL"
+},
+
+{
+  "type": "header",
+  "content": "Colors"
+},
+
+{
+  "type": "color",
+  "id": "bg_color",
+  "label": "Background color",
+  "default": "#FFFFFF"
+},
+
+{
+  "type": "color",
+  "id": "border_color",
+  "label": "Border color",
+  "default": "#EFEFEF"
+},
+
+{
+  "type": "color",
+  "id": "accent_color",
+  "label": "Accent color (logo, active nav)",
+  "default": "#C0374A"
+},
+
+{
+  "type": "color",
+  "id": "text_color",
+  "label": "Text color",
+  "default": "#333333"
+}
+
+
+],
+
+"presets": [
+
+
+{
+  "name": "Fashion Header"
+}
+
+
+]
+
+}
+
+{% endschema %}
